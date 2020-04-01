@@ -832,15 +832,11 @@ const buttons = {
 
     controlLeft: {
         service: true,
-        func: this.changeSigns,
-        obj: this,
         current: 'Ctrl',
     },
     altLeft: {
         service: true,
         current: 'Alt',
-        func: this.changeSigns,
-        obj: this,
     },
     space: {
         service: true,
@@ -848,14 +844,10 @@ const buttons = {
     },
     altRight: {
         service: true,
-        func: this.changeSigns,
-        obj: this,
         current: 'Alt',
     },
     controlRight: {
         service: true,
-        func: this.changeSigns,
-        obj: this,
         current: 'Ctrl',
     },
     arrowLeft: {
