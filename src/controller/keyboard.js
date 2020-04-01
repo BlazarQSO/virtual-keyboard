@@ -1,7 +1,7 @@
-import { keys } from '../model/keys.js';
+import keys from '../model/keys';
 
-export class Keyboard {
+export default class Keyboard {
     constructor(value) {
-        alert(keys['prop'] + value);
+        document.getElementById('id').innerHTML = keys.prop + value;
     }
 }

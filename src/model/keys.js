@@ -1,3 +1,5 @@
-export const keys = {
-    'prop': 10
-}
+const keys = {
+    prop: 10,
+};
+
+export default keys;
