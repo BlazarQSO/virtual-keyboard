@@ -213,29 +213,6 @@ const buttons = {
     backspace: {
         service: true,
         current: 'BackSpace',
-
-        onClickHandler() {
-            return () => {
-                const input = document.getElementById('input');
-                const select = input.selectionStart;
-                let text = input.textContent;
-                const selectEnd = input.selectionEnd;
-
-                if (select === selectEnd) {
-                    text = text.substring(0, select - 1) + text.substring(select, text.length);
-                    input.innerHTML = text;
-                    input.selectionStart = select - 1;
-                    input.selectionEnd = select - 1;
-                } else {
-                    text = text.substring(0, select) + text.substring(selectEnd, text.length);
-                    input.innerHTML = text;
-                    input.selectionStart = select;
-                    input.selectionEnd = select;
-                }
-
-                input.focus();
-            };
-        },
     },
 
     // #endregion

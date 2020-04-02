@@ -19,7 +19,6 @@ export default class Keyboard {
         wrapper.className = 'wrapper';
 
         const input = document.createElement('textarea');
-
         input.setAttribute('id', 'input');
         input.className = 'input';
         input.addEventListener('keydown', (e) => {
@@ -34,6 +33,7 @@ export default class Keyboard {
             btn.setAttribute('type', 'button');
             btn.className = 'button';
             btn.id = this.idBtns[i];
+            btn.classList.add(this.idBtns[i]);
 
             if (this.lang === 'ru' && !this.buttons[this.idBtns[i]].service) {
                 this.buttons[this.idBtns[i]].current = this.buttons[this.idBtns[i]].ru.signDef;
