@@ -123,6 +123,10 @@ body {
     outline: none;
 }
 
+.press:hover {
+    background-color: red;
+}
+
 .info {
     text-align: center;
     font-size: 26px;

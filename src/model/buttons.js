@@ -5,13 +5,13 @@ const buttons = {
     backquote: {
         service: false,
         current: '`',
-        en: {
+        firstLang: {
             signDef: '`',
             signCaps: '`',
             signShift: '~',
             signShiftCaps: '~',
         },
-        ru: {
+        secondLang: {
             signDef: 'ё',
             signCaps: 'Ё',
             signShift: 'Ё',
@@ -21,13 +21,13 @@ const buttons = {
     digit1: {
         service: false,
         current: '1',
-        en: {
+        firstLang: {
             signDef: '1',
             signCaps: '1',
             signShift: '!',
             signShiftCaps: '!',
         },
-        ru: {
+        secondLang: {
             signDef: '1',
             signCaps: '1',
             signShift: '!',
@@ -37,13 +37,13 @@ const buttons = {
     digit2: {
         service: false,
         current: '2',
-        en: {
+        firstLang: {
             signDef: '2',
             signCaps: '2',
             signShift: '@',
             signShiftCaps: '@',
         },
-        ru: {
+        secondLang: {
             signDef: '2',
             signCaps: '2',
             signShift: '&quot;',
@@ -53,13 +53,13 @@ const buttons = {
     digit3: {
         service: false,
         current: '3',
-        en: {
+        firstLang: {
             signDef: '3',
             signCaps: '3',
             signShift: '#',
             signShiftCaps: '#',
         },
-        ru: {
+        secondLang: {
             signDef: '3',
             signCaps: '3',
             signShift: '№',
@@ -69,13 +69,13 @@ const buttons = {
     digit4: {
         service: false,
         current: '4',
-        en: {
+        firstLang: {
             signDef: '4',
             signCaps: '4',
             signShift: '$',
             signShiftCaps: '$',
         },
-        ru: {
+        secondLang: {
             signDef: '4',
             signCaps: '4',
             signShift: ';',
@@ -85,13 +85,13 @@ const buttons = {
     digit5: {
         service: false,
         current: '5',
-        en: {
+        firstLang: {
             signDef: '5',
             signCaps: '5',
             signShift: '%',
             signShiftCaps: '%',
         },
-        ru: {
+        secondLang: {
             signDef: '5',
             signCaps: '5',
             signShift: '%',
@@ -101,13 +101,13 @@ const buttons = {
     digit6: {
         service: false,
         current: '6',
-        en: {
+        firstLang: {
             signDef: '6',
             signCaps: '6',
             signShift: '^',
             signShiftCaps: '^',
         },
-        ru: {
+        secondLang: {
             signDef: '6',
             signCaps: '6',
             signShift: ':',
@@ -117,13 +117,13 @@ const buttons = {
     digit7: {
         service: false,
         current: '7',
-        en: {
+        firstLang: {
             signDef: '7',
             signCaps: '7',
             signShift: '&',
             signShiftCaps: '&',
         },
-        ru: {
+        secondLang: {
             signDef: '7',
             signCaps: '7',
             signShift: '?',
@@ -133,13 +133,13 @@ const buttons = {
     digit8: {
         service: false,
         current: '8',
-        en: {
+        firstLang: {
             signDef: '8',
             signCaps: '8',
             signShift: '*',
             signShiftCaps: '*',
         },
-        ru: {
+        secondLang: {
             signDef: '8',
             signCaps: '8',
             signShift: '*',
@@ -149,13 +149,13 @@ const buttons = {
     digit9: {
         service: false,
         current: '9',
-        en: {
+        firstLang: {
             signDef: '9',
             signCaps: '9',
             signShift: '(',
             signShiftCaps: '(',
         },
-        ru: {
+        secondLang: {
             signDef: '9',
             signCaps: '9',
             signShift: '(',
@@ -165,13 +165,13 @@ const buttons = {
     digit0: {
         service: false,
         current: '0',
-        en: {
+        firstLang: {
             signDef: '0',
             signCaps: '0',
             signShift: ')',
             signShiftCaps: ')',
         },
-        ru: {
+        secondLang: {
             signDef: '0',
             signCaps: '0',
             signShift: ')',
@@ -181,13 +181,13 @@ const buttons = {
     minus: {
         service: false,
         current: '-',
-        en: {
+        firstLang: {
             signDef: '-',
             signCaps: '-',
             signShift: '_',
             signShiftCaps: '_',
         },
-        ru: {
+        secondLang: {
             signDef: '-',
             signCaps: '-',
             signShift: '_',
@@ -197,13 +197,13 @@ const buttons = {
     equal: {
         service: false,
         current: '=',
-        en: {
+        firstLang: {
             signDef: '=',
             signCaps: '=',
             signShift: '+',
             signShiftCaps: '+',
         },
-        ru: {
+        secondLang: {
             signDef: '=',
             signCaps: '=',
             signShift: '+',
@@ -222,19 +222,20 @@ const buttons = {
     tab: {
         service: true,
         current: 'Tab',
+        write: '\t',
     },
     keyQ: {
         title: 'KeyQ',
         value: 81,
         service: false,
         current: 'q',
-        en: {
+        firstLang: {
             signDef: 'q',
             signCaps: 'Q',
             signShift: 'Q',
             signShiftCaps: 'q',
         },
-        ru: {
+        secondLang: {
             signDef: 'й',
             signCaps: 'Й',
             signShift: 'Й',
@@ -244,13 +245,13 @@ const buttons = {
     keyW: {
         service: false,
         current: 'w',
-        en: {
+        firstLang: {
             signDef: 'w',
             signCaps: 'W',
             signShift: 'W',
             signShiftCaps: 'w',
         },
-        ru: {
+        secondLang: {
             signDef: 'ц',
             signCaps: 'Ц',
             signShift: 'Ц',
@@ -260,13 +261,13 @@ const buttons = {
     keyE: {
         service: false,
         current: 'e',
-        en: {
+        firstLang: {
             signDef: 'e',
             signCaps: 'E',
             signShift: 'E',
             signShiftCaps: 'e',
         },
-        ru: {
+        secondLang: {
             signDef: 'у',
             signCaps: 'У',
             signShift: 'У',
@@ -276,13 +277,13 @@ const buttons = {
     keyR: {
         service: false,
         current: 'r',
-        en: {
+        firstLang: {
             signDef: 'r',
             signCaps: 'R',
             signShift: 'R',
             signShiftCaps: 'r',
         },
-        ru: {
+        secondLang: {
             signDef: 'к',
             signCaps: 'К',
             signShift: 'К',
@@ -292,13 +293,13 @@ const buttons = {
     keyT: {
         service: false,
         current: 't',
-        en: {
+        firstLang: {
             signDef: 't',
             signCaps: 'T',
             signShift: 'T',
             signShiftCaps: 't',
         },
-        ru: {
+        secondLang: {
             signDef: 'е',
             signCaps: 'Е',
             signShift: 'Е',
@@ -308,13 +309,13 @@ const buttons = {
     keyY: {
         service: false,
         current: 'y',
-        en: {
+        firstLang: {
             signDef: 'y',
             signCaps: 'Y',
             signShift: 'Y',
             signShiftCaps: 'y',
         },
-        ru: {
+        secondLang: {
             signDef: 'н',
             signCaps: 'Н',
             signShift: 'Н',
@@ -324,13 +325,13 @@ const buttons = {
     keyU: {
         service: false,
         current: 'u',
-        en: {
+        firstLang: {
             signDef: 'u',
             signCaps: 'U',
             signShift: 'U',
             signShiftCaps: 'u',
         },
-        ru: {
+        secondLang: {
             signDef: 'г',
             signCaps: 'Г',
             signShift: 'Г',
@@ -340,13 +341,13 @@ const buttons = {
     keyI: {
         service: false,
         current: 'i',
-        en: {
+        firstLang: {
             signDef: 'i',
             signCaps: 'I',
             signShift: 'I',
             signShiftCaps: 'i',
         },
-        ru: {
+        secondLang: {
             signDef: 'ш',
             signCaps: 'Ш',
             signShift: 'Ш',
@@ -356,13 +357,13 @@ const buttons = {
     keyO: {
         service: false,
         current: 'o',
-        en: {
+        firstLang: {
             signDef: 'o',
             signCaps: 'O',
             signShift: 'O',
             signShiftCaps: 'o',
         },
-        ru: {
+        secondLang: {
             signDef: 'щ',
             signCaps: 'Щ',
             signShift: 'Щ',
@@ -372,13 +373,13 @@ const buttons = {
     keyP: {
         service: false,
         current: 'p',
-        en: {
+        firstLang: {
             signDef: 'p',
             signCaps: 'P',
             signShift: 'P',
             signShiftCaps: 'p',
         },
-        ru: {
+        secondLang: {
             signDef: 'з',
             signCaps: 'З',
             signShift: 'З',
@@ -388,13 +389,13 @@ const buttons = {
     bracketLeft: {
         service: false,
         current: '[',
-        en: {
+        firstLang: {
             signDef: '[',
             signCaps: '[',
             signShift: '{',
             signShiftCaps: '{',
         },
-        ru: {
+        secondLang: {
             signDef: 'х',
             signCaps: 'Х',
             signShift: 'Х',
@@ -404,13 +405,13 @@ const buttons = {
     bracketRight: {
         service: false,
         current: ']',
-        en: {
+        firstLang: {
             signDef: ']',
             signCaps: ']',
             signShift: '}',
             signShiftCaps: '}',
         },
-        ru: {
+        secondLang: {
             signDef: 'ъ',
             signCaps: 'Ъ',
             signShift: 'Ъ',
@@ -420,13 +421,13 @@ const buttons = {
     backslash: {
         service: false,
         current: '\\',
-        en: {
+        firstLang: {
             signDef: '\\',
             signCaps: '\\',
             signShift: '|',
             signShiftCaps: '|',
         },
-        ru: {
+        secondLang: {
             signDef: '\\',
             signCaps: '\\',
             signShift: '/',
@@ -439,7 +440,6 @@ const buttons = {
     // #region Row №3.
 
     capsLock: {
-        title: 'capsLock',
         service: true,
         current: 'CapsLock',
         down: false,
@@ -447,13 +447,13 @@ const buttons = {
     keyA: {
         service: false,
         current: 'a',
-        en: {
+        firstLang: {
             signDef: 'a',
             signCaps: 'A',
             signShift: 'A',
             signShiftCaps: 'a',
         },
-        ru: {
+        secondLang: {
             signDef: 'ф',
             signCaps: 'Ф',
             signShift: 'Ф',
@@ -463,13 +463,13 @@ const buttons = {
     keyS: {
         service: false,
         current: 's',
-        en: {
+        firstLang: {
             signDef: 's',
             signCaps: 'S',
             signShift: 'S',
             signShiftCaps: 's',
         },
-        ru: {
+        secondLang: {
             signDef: 'ы',
             signCaps: 'Ы',
             signShift: 'Ы',
@@ -479,13 +479,13 @@ const buttons = {
     keyD: {
         service: false,
         current: 'd',
-        en: {
+        firstLang: {
             signDef: 'd',
             signCaps: 'D',
             signShift: 'D',
             signShiftCaps: 'd',
         },
-        ru: {
+        secondLang: {
             signDef: 'в',
             signCaps: 'В',
             signShift: 'В',
@@ -495,13 +495,13 @@ const buttons = {
     keyF: {
         service: false,
         current: 'f',
-        en: {
+        firstLang: {
             signDef: 'f',
             signCaps: 'F',
             signShift: 'F',
             signShiftCaps: 'f',
         },
-        ru: {
+        secondLang: {
             signDef: 'а',
             signCaps: 'А',
             signShift: 'А',
@@ -511,13 +511,13 @@ const buttons = {
     keyG: {
         service: false,
         current: 'g',
-        en: {
+        firstLang: {
             signDef: 'g',
             signCaps: 'G',
             signShift: 'G',
             signShiftCaps: 'g',
         },
-        ru: {
+        secondLang: {
             signDef: 'п',
             signCaps: 'П',
             signShift: 'П',
@@ -527,13 +527,13 @@ const buttons = {
     keyH: {
         service: false,
         current: 'h',
-        en: {
+        firstLang: {
             signDef: 'h',
             signCaps: 'H',
             signShift: 'H',
             signShiftCaps: 'h',
         },
-        ru: {
+        secondLang: {
             signDef: 'р',
             signCaps: 'Р',
             signShift: 'Р',
@@ -543,13 +543,13 @@ const buttons = {
     keyJ: {
         service: false,
         current: 'j',
-        en: {
+        firstLang: {
             signDef: 'j',
             signCaps: 'J',
             signShift: 'J',
             signShiftCaps: 'j',
         },
-        ru: {
+        secondLang: {
             signDef: 'о',
             signCaps: 'О',
             signShift: 'О',
@@ -559,13 +559,13 @@ const buttons = {
     keyK: {
         service: false,
         current: 'k',
-        en: {
+        firstLang: {
             signDef: 'k',
             signCaps: 'K',
             signShift: 'K',
             signShiftCaps: 'k',
         },
-        ru: {
+        secondLang: {
             signDef: 'л',
             signCaps: 'Л',
             signShift: 'Л',
@@ -575,13 +575,13 @@ const buttons = {
     keyL: {
         service: false,
         current: 'l',
-        en: {
+        firstLang: {
             signDef: 'l',
             signCaps: 'L',
             signShift: 'L',
             signShiftCaps: 'l',
         },
-        ru: {
+        secondLang: {
             signDef: 'д',
             signCaps: 'Д',
             signShift: 'Д',
@@ -591,13 +591,13 @@ const buttons = {
     semicolon: {
         service: false,
         current: ';',
-        en: {
+        firstLang: {
             signDef: ';',
             signCaps: ';',
             signShift: ':',
             signShiftCaps: ':',
         },
-        ru: {
+        secondLang: {
             signDef: 'ж',
             signCaps: 'Ж',
             signShift: 'Ж',
@@ -607,13 +607,13 @@ const buttons = {
     quote: {
         service: false,
         current: "'",
-        en: {
+        firstLang: {
             signDef: "'",
             signCaps: "'",
             signShift: '&quot;',
             signShiftCaps: '&quot;',
         },
-        ru: {
+        secondLang: {
             signDef: 'э',
             signCaps: 'Э',
             signShift: 'Э',
@@ -623,6 +623,7 @@ const buttons = {
     enter: {
         service: true,
         current: 'Enter',
+        write: '\n',
     },
 
     // #endregion
@@ -636,13 +637,13 @@ const buttons = {
     keyZ: {
         service: false,
         current: 'z',
-        en: {
+        firstLang: {
             signDef: 'z',
             signCaps: 'Z',
             signShift: 'Z',
             signShiftCaps: 'z',
         },
-        ru: {
+        secondLang: {
             signDef: 'я',
             signCaps: 'Я',
             signShift: 'Я',
@@ -652,13 +653,13 @@ const buttons = {
     keyX: {
         service: false,
         current: 'x',
-        en: {
+        firstLang: {
             signDef: 'x',
             signCaps: 'X',
             signShift: 'X',
             signShiftCaps: 'x',
         },
-        ru: {
+        secondLang: {
             signDef: 'ч',
             signCaps: 'Ч',
             signShift: 'Ч',
@@ -668,13 +669,13 @@ const buttons = {
     keyC: {
         service: false,
         current: 'c',
-        en: {
+        firstLang: {
             signDef: 'c',
             signCaps: 'C',
             signShift: 'C',
             signShiftCaps: 'c',
         },
-        ru: {
+        secondLang: {
             signDef: 'с',
             signCaps: 'С',
             signShift: 'С',
@@ -684,13 +685,13 @@ const buttons = {
     keyV: {
         service: false,
         current: 'v',
-        en: {
+        firstLang: {
             signDef: 'v',
             signCaps: 'V',
             signShift: 'V',
             signShiftCaps: 'v',
         },
-        ru: {
+        secondLang: {
             signDef: 'м',
             signCaps: 'М',
             signShift: 'М',
@@ -700,13 +701,13 @@ const buttons = {
     keyB: {
         service: false,
         current: 'b',
-        en: {
+        firstLang: {
             signDef: 'b',
             signCaps: 'B',
             signShift: 'B',
             signShiftCaps: 'b',
         },
-        ru: {
+        secondLang: {
             signDef: 'и',
             signCaps: 'И',
             signShift: 'И',
@@ -716,13 +717,13 @@ const buttons = {
     keyN: {
         service: false,
         current: 'n',
-        en: {
+        firstLang: {
             signDef: 'n',
             signCaps: 'N',
             signShift: 'N',
             signShiftCaps: 'n',
         },
-        ru: {
+        secondLang: {
             signDef: 'т',
             signCaps: 'Т',
             signShift: 'Т',
@@ -732,13 +733,13 @@ const buttons = {
     keyM: {
         service: false,
         current: 'm',
-        en: {
+        firstLang: {
             signDef: 'm',
             signCaps: 'M',
             signShift: 'M',
             signShiftCaps: 'm',
         },
-        ru: {
+        secondLang: {
             signDef: 'ь',
             signCaps: 'Ь',
             signShift: 'Ь',
@@ -748,13 +749,13 @@ const buttons = {
     comma: {
         service: false,
         current: ',',
-        en: {
+        firstLang: {
             signDef: ',',
             signCaps: ',',
             signShift: '<',
             signShiftCaps: '<',
         },
-        ru: {
+        secondLang: {
             signDef: 'б',
             signCaps: 'Б',
             signShift: 'Б',
@@ -764,13 +765,13 @@ const buttons = {
     period: {
         service: false,
         current: '.',
-        en: {
+        firstLang: {
             signDef: '.',
             signCaps: '.',
             signShift: '>',
             signShiftCaps: '>',
         },
-        ru: {
+        secondLang: {
             signDef: 'ю',
             signCaps: 'Ю',
             signShift: 'Ю',
@@ -780,13 +781,13 @@ const buttons = {
     slash: {
         service: false,
         current: '/',
-        en: {
+        firstLang: {
             signDef: '/',
             signCaps: '/',
             signShift: '?',
             signShiftCaps: '?',
         },
-        ru: {
+        secondLang: {
             signDef: '.',
             signCaps: '.',
             signShift: ',',
@@ -818,6 +819,7 @@ const buttons = {
     space: {
         service: true,
         current: 'Space',
+        write: ' ',
     },
     altRight: {
         service: true,
