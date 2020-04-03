@@ -62,82 +62,15 @@ export default class Keyboard {
 
     createEvent(targetId) {
         const keyboard = document.getElementById('keyboard');
-        keyboard.addEventListener('mousedown', (e) => {
-            if (e.target.closest('div').className === 'keyboard') {
-                if (!this.buttons[e.target.id].service) {
-                    this.focusSelect(this.buttons[e.target.id].current);
-                } else if (this.buttons[e.target.id].write) {
-                    this.focusSelect(this.buttons[e.target.id].write);
-                } else {
-                    switch (e.target.id) {
-                    case 'delete':
-                        this.buttonDelete();
-                        break;
-                    case 'backspace':
-                        this.buttonBackspace();
-                        break;
-                    case 'shiftLeft':
-                        this.buttonShiftDown('left');
-                        break;
-                    case 'shiftRight':
-                        this.buttonShiftDown('right');
-                        break;
-                    case 'controlLeft':
-                        this.buttonCtrlDown('left');
-                        break;
-                    case 'controlRight':
-                        this.buttonCtrlDown('right');
-                        break;
-                    case 'altLeft':
-                        this.buttonAltDown('left');
-                        break;
-                    case 'altRight':
-                        this.buttonAltDown('right');
-                        break;
-                    case 'capsLock':
-                        this.buttonCapsDown();
-                        break;
-                    default:
-                        break;
-                    }
-                }
-            }
-        });
+        keyboard.addEventListener('mousedown', this.mouseDown.bind(this), false);
+        keyboard.addEventListener('mouseup', this.mouseUp.bind(this), false);
 
-        keyboard.addEventListener('mouseup', (e) => {
-            if (e.target.closest('div').className === 'keyboard') {
-                switch (e.target.id) {
-                case 'shiftLeft':
-                    this.buttonShiftUp('left');
-                    break;
-                case 'shiftRight':
-                    this.buttonShiftUp('right');
-                    break;
-                case 'controlLeft':
-                    this.buttonCtrlUp('left');
-                    break;
-                case 'controlRight':
-                    this.buttonCtrlUp('right');
-                    break;
-                case 'altLeft':
-                    this.buttonAltUp('left');
-                    break;
-                case 'altRight':
-                    this.buttonAltUp('right');
-                    break;
-                default:
-                    break;
-                }
-            }
-            this.input.focus();
-        });
-
-        document.getElementById(targetId).addEventListener('keydown', this.keyDown, false);
-        document.getElementById(targetId).addEventListener('keyup', this.keyUp, false);
-        window.addEventListener('blur', this.keyDefault, false);
+        document.getElementById(targetId).addEventListener('keydown', this.keyDown.bind(this), false);
+        document.getElementById(targetId).addEventListener('keyup', this.keyUp.bind(this), false);
+        window.addEventListener('blur', this.keyDefault.bind(this), false);
     }
 
-    focusSelect(current) {
+    writeLetter(current) {
         const select = this.input.selectionStart;
         let text = this.input.textContent;
         text = text.substring(0, select) + current + text.substring(select, text.length);
@@ -146,16 +79,115 @@ export default class Keyboard {
         this.input.selectionEnd = select + 1;
     }
 
-    keyDown() {
-        this.cap = 'cap';
+    pressKey(id) {
+        if (!this.buttons[id].service) {
+            this.writeLetter(this.buttons[id].current);
+        } else if (this.buttons[id].write) {
+            this.writeLetter(this.buttons[id].write);
+        } else {
+            switch (id) {
+            case 'delete':
+                this.buttonDelete();
+                break;
+            case 'backspace':
+                this.buttonBackspace();
+                break;
+            case 'shiftLeft':
+                this.buttonShiftDown('left');
+                break;
+            case 'shiftRight':
+                this.buttonShiftDown('right');
+                break;
+            case 'controlLeft':
+                this.buttonCtrlDown('left');
+                break;
+            case 'controlRight':
+                this.buttonCtrlDown('right');
+                break;
+            case 'altLeft':
+                this.buttonAltDown('left');
+                break;
+            case 'altRight':
+                this.buttonAltDown('right');
+                break;
+            case 'capsLock':
+                this.buttonCapsDown();
+                break;
+            default:
+                break;
+            }
+        }
     }
 
-    keyUp() {
-        this.cap = 'cap';
+    upKey(id) {
+        switch (id) {
+        case 'shiftLeft':
+            this.buttonShiftUp('left');
+            break;
+        case 'shiftRight':
+            this.buttonShiftUp('right');
+            break;
+        case 'controlLeft':
+            this.buttonCtrlUp('left');
+            break;
+        case 'controlRight':
+            this.buttonCtrlUp('right');
+            break;
+        case 'altLeft':
+            this.buttonAltUp('left');
+            break;
+        case 'altRight':
+            this.buttonAltUp('right');
+            break;
+        case 'capsLock':
+            this.buttonCapsUp();
+            break;
+        default:
+            break;
+        }
+        this.input.focus();
+    }
+
+    mouseDown(e) {
+        if (e.target.closest('div').className === 'keyboard' && e.target.id !== 'keyboard') {
+            this.pressKey(e.target.id);
+        }
+    }
+
+    mouseUp(e) {
+        if (e.target.closest('div').className === 'keyboard') {
+            this.upKey(e.target.id);
+        }
+    }
+
+    keyDown(e) {
+        const id = e.code.substring(0, 1).toLowerCase() + e.code.substring(1, e.code.length);
+        if (document.getElementById(id)) {
+            if (id !== 'capsLock') {
+                document.getElementById(id).classList.add('press');
+                this.pressKey(id);
+            } else if (!this.buttons.capsLock.down) {
+                this.buttons.capsLock.down = true;
+                document.getElementById(id).classList.add('press');
+                this.pressKey(id);
+            }
+        }
+        this.input.focus();
+    }
+
+    keyUp(e) {
+        const id = e.code.substring(0, 1).toLowerCase() + e.code.substring(1, e.code.length);
+        if (document.getElementById(id)) {
+            this.buttons.capsLock.down = false;
+            document.getElementById(id).classList.remove('press');
+            this.upKey(id);
+        }
     }
 
     keyDefault() {
-        this.cap = 'cap';
+        for (let i = 0, len = this.idBtns.length; i < len; i += 1) {
+            document.getElementById(this.idBtns[i]).classList.remove('press');
+        }
     }
 
     buttonDelete() {
@@ -199,6 +231,8 @@ export default class Keyboard {
     buttonShiftUp(direction) {
         this.shiftL = (direction === 'left') ? false : this.shiftL;
         this.shiftR = (direction === 'right') ? false : this.shiftR;
+        if (this.shiftL) document.getElementById('shiftLeft').classList.remove('press');
+        if (this.shiftR) document.getElementById('shiftRight').classList.remove('press');
         this.redrawLetters();
     }
 
@@ -233,9 +267,17 @@ export default class Keyboard {
     }
 
     buttonCapsDown() {
-        document.getElementById('capsLock').classList.toggle('press');
+        if (!this.buttons.capsLock.down) {
+            document.getElementById('capsLock').classList.add('press');
+        }
         this.caps = !this.caps;
         this.redrawLetters();
+    }
+
+    buttonCapsUp() {
+        if (!this.buttons.capsLock.down) {
+            document.getElementById('capsLock').classList.remove('press');
+        }
     }
 
     redrawLetters() {
