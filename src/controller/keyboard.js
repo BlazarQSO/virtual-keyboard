@@ -10,6 +10,8 @@ export default class Keyboard {
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
         this.buttons = buttons;
         this.idBtns = Object.keys(this.buttons);
+        this.select = -1;
+        this.selectionSideLeft = false;
     }
 
     create(targetId) {
@@ -64,6 +66,7 @@ export default class Keyboard {
         const keyboard = document.getElementById('keyboard');
         keyboard.addEventListener('mousedown', this.mouseDown.bind(this), false);
         keyboard.addEventListener('mouseup', this.mouseUp.bind(this), false);
+        this.input.addEventListener('mouseup', this.mouseInputUp.bind(this), false);
 
         document.getElementById(targetId).addEventListener('keydown', this.keyDown.bind(this), false);
         document.getElementById(targetId).addEventListener('keyup', this.keyUp.bind(this), false);
@@ -93,10 +96,10 @@ export default class Keyboard {
                 this.buttonBackspace();
                 break;
             case 'shiftLeft':
-                this.buttonShiftDown('left');
+                this.buttonLeftShiftDown();
                 break;
             case 'shiftRight':
-                this.buttonShiftDown('right');
+                this.buttonRightShiftDown();
                 break;
             case 'controlLeft':
                 this.buttonCtrlDown('left');
@@ -113,6 +116,18 @@ export default class Keyboard {
             case 'capsLock':
                 this.buttonCapsDown();
                 break;
+            case 'arrowLeft':
+                this.buttonArrowLeft();
+                break;
+            case 'arrowRight':
+                this.buttonArrowRight();
+                break;
+            case 'arrowDown':
+                this.buttonArrowDown();
+                break;
+            case 'arrowUp':
+                this.buttonArrowUp();
+                break;
             default:
                 break;
             }
@@ -122,10 +137,10 @@ export default class Keyboard {
     upKey(id) {
         switch (id) {
         case 'shiftLeft':
-            this.buttonShiftUp('left');
+            this.buttonLeftShiftUp();
             break;
         case 'shiftRight':
-            this.buttonShiftUp('right');
+            this.buttonRightShiftUp();
             break;
         case 'controlLeft':
             this.buttonCtrlUp('left');
@@ -160,6 +175,12 @@ export default class Keyboard {
         }
     }
 
+    mouseInputUp() {
+        if (this.input.selectionEnd !== this.input.selectionStart) {
+            this.selectionSideLeft = (this.input.selectionDirection === 'backward');
+        }
+    }
+
     keyDown(e) {
         const id = e.code.substring(0, 1).toLowerCase() + e.code.substring(1, e.code.length);
         if (document.getElementById(id)) {
@@ -180,6 +201,12 @@ export default class Keyboard {
         if (document.getElementById(id)) {
             this.buttons.capsLock.down = false;
             document.getElementById(id).classList.remove('press');
+            if (!e.shiftKey) {
+                document.getElementById('shiftLeft').classList.remove('press');
+                document.getElementById('shiftRight').classList.remove('press');
+                this.shiftR = false;
+                this.shiftL = false;
+            }
             this.upKey(id);
         }
     }
@@ -222,18 +249,58 @@ export default class Keyboard {
         }
     }
 
-    buttonShiftDown(direction) {
-        this.shiftL = (direction === 'left') ? true : this.shiftL;
-        this.shiftR = (direction === 'right') ? true : this.shiftR;
-        this.redrawLetters();
+    buttonLeftShiftDown() {
+        this.rememberSelect();
+        this.shiftL = true;
+        if (!(this.shiftL && this.shiftR)) {
+            this.redrawLetters();
+        }
     }
 
-    buttonShiftUp(direction) {
-        this.shiftL = (direction === 'left') ? false : this.shiftL;
-        this.shiftR = (direction === 'right') ? false : this.shiftR;
-        if (this.shiftL) document.getElementById('shiftLeft').classList.remove('press');
-        if (this.shiftR) document.getElementById('shiftRight').classList.remove('press');
-        this.redrawLetters();
+    buttonRightShiftDown() {
+        this.rememberSelect();
+        this.shiftR = true;
+        if (!(this.shiftL && this.shiftR)) {
+            this.redrawLetters();
+        }
+    }
+
+    buttonLeftShiftUp() {
+        if (this.select > this.input.selectionStart) {
+            this.selectionSideLeft = true;
+        } else {
+            this.selectionSideLeft = false;
+        }
+        this.select = -1;
+
+        this.shiftL = false;
+        if (!this.shiftR) {
+            this.redrawLetters();
+        }
+    }
+
+    buttonRightShiftUp() {
+        if (this.select > this.input.selectionStart) {
+            this.selectionSideLeft = true;
+        } else {
+            this.selectionSideLeft = false;
+        }
+        this.select = -1;
+
+        this.shiftR = false;
+        if (!this.shiftL) {
+            this.redrawLetters();
+        }
+    }
+
+    rememberSelect() {
+        if (this.input.selectionStart === this.input.selectionEnd) {
+            this.select = this.input.selectionStart;
+        } else if (this.selectionSideLeft) {
+            this.select = this.input.selectionEnd;
+        } else {
+            this.select = this.input.selectionStart;
+        }
     }
 
     buttonCtrlDown(direction) {
@@ -289,6 +356,68 @@ export default class Keyboard {
                     this.changeLetter(key, 'secondLang');
                 }
             }
+        }
+    }
+
+    buttonArrowLeft() {
+        if (this.shiftL || this.shiftR) {
+            if (this.select < this.input.selectionEnd) {
+                if (this.input.selectionEnd > 0) {
+                    this.input.selectionEnd -= 1;
+                }
+            } else if (this.input.selectionStart > 0) {
+                this.input.selectionStart -= 1;
+            }
+        } else if (this.input.selectionEnd === this.input.selectionStart) {
+            if (this.input.selectionStart > 0) {
+                this.input.selectionStart -= 1;
+                this.input.selectionEnd -= 1;
+            }
+        } else {
+            this.input.selectionEnd = this.input.selectionStart;
+        }
+    }
+
+    buttonArrowRight() {
+        if (this.shiftL || this.shiftR) {
+            if (this.select > this.input.selectionStart) {
+                this.input.selectionStart += 1;
+            } else {
+                this.input.selectionEnd += 1;
+            }
+        } else if (this.input.selectionEnd === this.input.selectionStart) {
+            this.input.selectionEnd += 1;
+            this.input.selectionStart += 1;
+        } else {
+            this.input.selectionStart = this.input.selectionEnd;
+        }
+    }
+
+    buttonArrowDown() {
+        let select = this.input.selectionEnd;
+        if (select + 60 <= this.input.textContent.length) {
+            select += 60;
+        }
+
+        if (!this.shiftL && !this.shiftR) {
+            this.input.selectionStart = select;
+            this.input.selectionEnd = select;
+        } else {
+            this.input.selectionEnd = select;
+        }
+    }
+
+    buttonArrowUp() {
+        let select = this.input.selectionStart;
+        if (select >= 60) {
+            select -= 60;
+        }
+
+        if (!this.shiftL && !this.shiftR) {
+            this.input.selectionStart = select;
+            this.input.selectionEnd = select;
+        } else {
+            this.input.selectionStart = select;
         }
     }
 
