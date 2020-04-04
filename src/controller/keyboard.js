@@ -34,7 +34,7 @@ export default class Keyboard {
         keyboard.className = 'keyboard';
         keyboard.id = 'keyboard';
 
-        for (let i = 0; i < this.idBtns.length; i += 1) {
+        for (let i = 0, len = this.idBtns.length; i < len; i += 1) {
             const btn = document.createElement('button');
             btn.setAttribute('type', 'button');
             btn.className = 'button';
@@ -49,13 +49,8 @@ export default class Keyboard {
             keyboard.append(btn);
         }
 
-        const info = document.createElement('p');
-        info.className = 'info';
-        info.innerHTML = 'OS: Window 10, change language: Ctrl + Alt';
-
         wrapper.append(input);
         wrapper.append(keyboard);
-        wrapper.append(info);
         document.getElementById(targetId).append(wrapper);
 
         input.focus();
@@ -74,27 +69,32 @@ export default class Keyboard {
     }
 
     changeLanguages(order, language) {
-        for (let i = 0, len = language.length; i < len; i += 1) {
-            const [signDef, signCaps, signShift, signShiftCaps] = language[i];
-            this.buttons[this.idBtns[i]].current = signDef;
-            if (this.buttons[this.idBtns[i]][order]) {
-                if (language[i].length === 2) {
-                    this.buttons[this.idBtns[i]][order].signDef = signDef;
-                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
-                    this.buttons[this.idBtns[i]][order].signShift = signCaps;
-                    this.buttons[this.idBtns[i]][order].signShiftCaps = signDef;
-                } else if (language[i].length === 3) {
-                    this.buttons[this.idBtns[i]][order].signDef = signDef;
-                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
-                    this.buttons[this.idBtns[i]][order].signShift = signShift;
-                    this.buttons[this.idBtns[i]][order].signShiftCaps = signShift;
-                } else {
-                    this.buttons[this.idBtns[i]][order].signDef = signDef;
-                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
-                    this.buttons[this.idBtns[i]][order].signShift = signShift;
-                    this.buttons[this.idBtns[i]][order].signShiftCaps = signShiftCaps;
+        try {
+            for (let i = 0, len = language.length; i < len; i += 1) {
+                const [signDef, signCaps, signShift, signShiftCaps] = language[i];
+                this.buttons[this.idBtns[i]].current = signDef;
+                if (this.buttons[this.idBtns[i]][order]) {
+                    if (language[i].length === 2) {
+                        this.buttons[this.idBtns[i]][order].signDef = signDef;
+                        this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                        this.buttons[this.idBtns[i]][order].signShift = signCaps;
+                        this.buttons[this.idBtns[i]][order].signShiftCaps = signDef;
+                    } else if (language[i].length === 3) {
+                        this.buttons[this.idBtns[i]][order].signDef = signDef;
+                        this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                        this.buttons[this.idBtns[i]][order].signShift = signShift;
+                        this.buttons[this.idBtns[i]][order].signShiftCaps = signShift;
+                    } else {
+                        this.buttons[this.idBtns[i]][order].signDef = signDef;
+                        this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                        this.buttons[this.idBtns[i]][order].signShift = signShift;
+                        this.buttons[this.idBtns[i]][order].signShiftCaps = signShiftCaps;
+                    }
                 }
             }
+            this.redrawLetters();
+        } catch (error) {
+            this.error = error.message;
         }
     }
 
@@ -372,18 +372,6 @@ export default class Keyboard {
         }
     }
 
-    redrawLetters() {
-        for (let key = 0, len = this.idBtns.length; key < len; key += 1) {
-            if (!this.buttons[this.idBtns[key]].service) {
-                if (this.lang === 'firstLang') {
-                    this.changeLetter(key, 'firstLang');
-                } else {
-                    this.changeLetter(key, 'secondLang');
-                }
-            }
-        }
-    }
-
     buttonArrowLeft() {
         if (this.shiftL || this.shiftR) {
             if (this.select < this.input.selectionEnd) {
@@ -443,6 +431,18 @@ export default class Keyboard {
             this.input.selectionEnd = select;
         } else {
             this.input.selectionStart = select;
+        }
+    }
+
+    redrawLetters() {
+        for (let key = 0, len = this.idBtns.length; key < len; key += 1) {
+            if (!this.buttons[this.idBtns[key]].service) {
+                if (this.lang === 'firstLang') {
+                    this.changeLetter(key, 'firstLang');
+                } else {
+                    this.changeLetter(key, 'secondLang');
+                }
+            }
         }
     }
 
