@@ -26,7 +26,7 @@ body {
     resize: none;
 }
 
-.button {
+.chooseLanguages, .button {
     color: darkgreen;
     width: 50px;
     height: 50px;
@@ -48,7 +48,14 @@ body {
     transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 
-.button:hover {
+.chooseLanguages {
+    font-size: 22px;
+    margin-left: 25px;
+    width: 180px;
+    height: 40px;
+}
+
+.chooseLanguages:hover, .button:hover {
     background-image: none;
     background-color: burlywood;
     color: blue;
@@ -58,7 +65,7 @@ body {
     text-decoration: none;
 }
 
-.button:active {
+.chooseLanguages:active, .button:active {
     background-color: red;
     color: black;
     box-shadow: 1px 1px 2px black;
@@ -130,4 +137,15 @@ body {
     text-align: center;
     font-size: 26px;
     color: goldenrod;
+}
+
+.wrapperLanguages {
+    width: 900px;
+    margin: 0 auto;
+    font-size: 24px;
+    color: green;
+}
+
+.wrapperLanguages label {
+    margin-left: 12px;
 }

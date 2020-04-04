@@ -73,6 +73,31 @@ export default class Keyboard {
         window.addEventListener('blur', this.keyDefault.bind(this), false);
     }
 
+    changeLanguages(order, language) {
+        for (let i = 0, len = language.length; i < len; i += 1) {
+            const [signDef, signCaps, signShift, signShiftCaps] = language[i];
+            this.buttons[this.idBtns[i]].current = signDef;
+            if (this.buttons[this.idBtns[i]][order]) {
+                if (language[i].length === 2) {
+                    this.buttons[this.idBtns[i]][order].signDef = signDef;
+                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                    this.buttons[this.idBtns[i]][order].signShift = signCaps;
+                    this.buttons[this.idBtns[i]][order].signShiftCaps = signDef;
+                } else if (language[i].length === 3) {
+                    this.buttons[this.idBtns[i]][order].signDef = signDef;
+                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                    this.buttons[this.idBtns[i]][order].signShift = signShift;
+                    this.buttons[this.idBtns[i]][order].signShiftCaps = signShift;
+                } else {
+                    this.buttons[this.idBtns[i]][order].signDef = signDef;
+                    this.buttons[this.idBtns[i]][order].signCaps = signCaps;
+                    this.buttons[this.idBtns[i]][order].signShift = signShift;
+                    this.buttons[this.idBtns[i]][order].signShiftCaps = signShiftCaps;
+                }
+            }
+        }
+    }
+
     writeLetter(current) {
         const select = this.input.selectionStart;
         let text = this.input.textContent;
