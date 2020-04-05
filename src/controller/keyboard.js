@@ -1,7 +1,7 @@
 import languagesList from '../model/languages';
 
 export default class Keyboard {
-    constructor(buttons) {
+    constructor(buttons, cols = 60, viewRow = 6, rowHeight = 30.5) {
         this.shiftL = false;
         this.shiftR = false;
         this.ctrlL = false;
@@ -11,7 +11,9 @@ export default class Keyboard {
         this.caps = false;
         this.ctrlAlt = false;
         this.scroll = 0;
-        this.inputFrame = [0, 6];
+        this.inputFrame = [0, viewRow];
+        this.cols = cols;
+        this.rowHeight = rowHeight;
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
         this.buttons = buttons;
         this.idBtns = Object.keys(this.buttons);
@@ -19,19 +21,18 @@ export default class Keyboard {
         this.selectionSideLeft = false;
     }
 
-    create(targetId, cols = 60, viewRow = 6) {
-        this.createKeyboard(targetId, cols);
+    create(targetId) {
+        this.createKeyboard(targetId);
         this.createEvent(targetId);
-        this.inputFrame[1] = viewRow;
     }
 
-    createKeyboard(targetId, cols) {
+    createKeyboard(targetId) {
         const wrapper = document.createElement('div');
         wrapper.className = 'wrapper';
 
         const input = document.createElement('textarea');
         input.setAttribute('id', 'input');
-        input.setAttribute('cols', cols);
+        input.setAttribute('cols', this.cols);
         input.setAttribute('wrap', 'hard');
         input.className = 'input';
         input.addEventListener('keydown', (e) => {
@@ -118,6 +119,7 @@ export default class Keyboard {
     writeLetter(current) {
         const select = this.input.selectionStart;
         let text = this.input.textContent;
+
         text = text.substring(0, select) + current + text.substring(select, text.length);
         this.input.innerHTML = text;
         if (current !== '    ') {
@@ -215,7 +217,15 @@ export default class Keyboard {
 
     mouseDown(e) {
         if (e.target.closest('div').className === 'keyboard' && e.target.id !== 'keyboard') {
-            this.pressKey(e.target.id);
+            if (e.code === 'KeyA' && (this.ctrlL || this.ctrlR)) {
+                this.pushCtrlA();
+            } else if (e.code === 'KeyC' && (this.ctrlL || this.ctrlR)) {
+                this.pushCtrlC();
+            } else if (e.code === 'KeyV' && (this.ctrlL || this.ctrlR)) {
+                this.pushCtrlV();
+            } else {
+                this.pressKey(e.target.id);
+            }
         }
     }
 
@@ -232,15 +242,23 @@ export default class Keyboard {
     }
 
     keyDown(e) {
-        const id = e.code.substring(0, 1).toLowerCase() + e.code.substring(1, e.code.length);
-        if (document.getElementById(id)) {
-            if (id !== 'capsLock') {
-                document.getElementById(id).classList.add('press');
-                this.pressKey(id);
-            } else if (!this.buttons.capsLock.down) {
-                this.buttons.capsLock.down = true;
-                document.getElementById(id).classList.add('press');
-                this.pressKey(id);
+        if (e.code === 'KeyA' && (this.ctrlL || this.ctrlR)) {
+            this.pushCtrlA();
+        } else if (e.code === 'KeyC' && (this.ctrlL || this.ctrlR)) {
+            this.pushCtrlC();
+        } else if (e.code === 'KeyV' && (this.ctrlL || this.ctrlR)) {
+            this.pushCtrlV();
+        } else {
+            const id = e.code.substring(0, 1).toLowerCase() + e.code.substring(1, e.code.length);
+            if (document.getElementById(id)) {
+                if (id !== 'capsLock') {
+                    document.getElementById(id).classList.add('press');
+                    this.pressKey(id);
+                } else if (!this.buttons.capsLock.down) {
+                    this.buttons.capsLock.down = true;
+                    document.getElementById(id).classList.add('press');
+                    this.pressKey(id);
+                }
             }
         }
         this.input.focus();
@@ -536,16 +554,15 @@ export default class Keyboard {
         if (direction === 'up') nextRow = row - 1;
         if (direction === 'down') nextRow = row + 1;
 
-        const ROW_HEIGHT = 31;
         if (nextRow < this.inputFrame[0]) {
             this.inputFrame[0] -= 1;
             this.inputFrame[1] -= 1;
-            this.scroll = (nextRow) * ROW_HEIGHT;
+            this.scroll = (nextRow) * this.rowHeight;
             this.input.scrollTop = this.scroll;
         } if (nextRow > this.inputFrame[1]) {
             this.inputFrame[0] += 1;
             this.inputFrame[1] += 1;
-            this.scroll = (nextRow - 6) * ROW_HEIGHT;
+            this.scroll = (nextRow - 6) * this.rowHeight;
             this.input.scrollTop = this.scroll;
         }
         this.input.scrollTop = this.scroll;
@@ -669,5 +686,37 @@ export default class Keyboard {
         this.input.selectionEnd = end - (text.length - this.input.innerHTML.length);
         this.input.selectionStart = start - (text.length - this.input.innerHTML.length);
         return rowsText;
+    }
+
+    pushCtrlA() {
+        this.input.selectionStart = 0;
+        this.input.selectionEnd = this.input.innerHTML.length;
+        this.input.scrollTop = this.scroll;
+    }
+
+    pushCtrlC() {
+        const buf = this.input.innerHTML.slice(this.input.selectionStart, this.input.selectionEnd);
+        navigator.clipboard.writeText(buf);
+        this.input.scrollTop = this.scroll;
+    }
+
+    pushCtrlV() {
+        navigator.clipboard.readText()
+            .then((buffer) => {
+                const text = this.input.innerHTML;
+                const start = this.input.selectionStart;
+                const end = this.input.selectionEnd;
+                this.bufferSelect = end - (end - start) + buffer.length;
+                this.input.innerHTML = text.slice(0, start) + buffer + text.slice(end);
+            })
+            .finally(() => {
+                this.input.focus();
+                this.input.selectionEnd = this.bufferSelect;
+                this.input.selectionStart = this.input.selectionEnd;
+                this.input.scrollTop = this.scroll;
+            })
+            .catch((err) => {
+                this.error = err.message;
+            });
     }
 }
