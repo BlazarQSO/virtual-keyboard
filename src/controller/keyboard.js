@@ -19,12 +19,14 @@ export default class Keyboard {
         this.createEvent(targetId);
     }
 
-    createKeyboard(targetId) {
+    createKeyboard(targetId, cols = 60) {
         const wrapper = document.createElement('div');
         wrapper.className = 'wrapper';
 
         const input = document.createElement('textarea');
         input.setAttribute('id', 'input');
+        input.setAttribute('cols', cols);
+        input.setAttribute('wrap', 'hard');
         input.className = 'input';
         input.addEventListener('keydown', (e) => {
             e.preventDefault();
@@ -103,8 +105,13 @@ export default class Keyboard {
         let text = this.input.textContent;
         text = text.substring(0, select) + current + text.substring(select, text.length);
         this.input.innerHTML = text;
-        this.input.selectionStart = select + 1;
-        this.input.selectionEnd = select + 1;
+        if (current !== '    ') {
+            this.input.selectionStart = select + 1;
+            this.input.selectionEnd = select + 1;
+        } else {
+            this.input.selectionStart = select + 4;
+            this.input.selectionEnd = select + 4;
+        }
     }
 
     pressKey(id) {
@@ -373,6 +380,7 @@ export default class Keyboard {
     }
 
     buttonArrowLeft() {
+        this.parseText();
         if (this.shiftL || this.shiftR) {
             if (this.select < this.input.selectionEnd) {
                 if (this.input.selectionEnd > 0) {
@@ -392,6 +400,7 @@ export default class Keyboard {
     }
 
     buttonArrowRight() {
+        this.parseText();
         if (this.shiftL || this.shiftR) {
             if (this.select > this.input.selectionStart) {
                 this.input.selectionStart += 1;
@@ -407,27 +416,91 @@ export default class Keyboard {
     }
 
     buttonArrowDown() {
-        let select = this.input.selectionEnd;
-        if (select + 60 <= this.input.textContent.length) {
-            select += 60;
+        let select;
+        if (this.select > this.input.selectionStart) {
+            select = this.input.selectionStart;
+        } else {
+            select = this.input.selectionEnd;
+        }
+
+        const rowsText = this.parseText();
+
+        let count = 0;
+        let row = 0;
+        let marginLeftSelect = 0;
+        for (let i = 0, len = rowsText.length; i < len; i += 1) {
+            count += rowsText[i].length + 1;
+            if (select < count) {
+                row = i;
+                len = 0;
+                marginLeftSelect = select - (count - rowsText[i].length);
+            }
+        }
+
+        if (row < rowsText.length - 1) {
+            if (marginLeftSelect >= rowsText[row + 1].length) {
+                select += rowsText[row].length - marginLeftSelect + rowsText[row + 1].length;
+            } else {
+                select += rowsText[row].length + 1;
+            }
+        } else {
+            select = this.input.innerHTML.length;
         }
 
         if (!this.shiftL && !this.shiftR) {
+            if (this.input.selectionStart === this.input.selectionEnd) {
+                this.input.selectionStart = select;
+                this.input.selectionEnd = select;
+            } else {
+                this.input.selectionStart = this.input.selectionEnd;
+            }
+        } else if (this.select > this.input.selectionStart) {
             this.input.selectionStart = select;
-            this.input.selectionEnd = select;
         } else {
             this.input.selectionEnd = select;
         }
     }
 
     buttonArrowUp() {
-        let select = this.input.selectionStart;
-        if (select >= 60) {
-            select -= 60;
+        let select;
+        if (this.select < this.input.selectionEnd) {
+            select = this.input.selectionEnd;
+        } else {
+            select = this.input.selectionStart;
+        }
+
+        const rowsText = this.parseText();
+
+        let count = 0;
+        let row = 0;
+        let marginLeftSelect = 0;
+        for (let i = 0, len = rowsText.length; i < len; i += 1) {
+            count += rowsText[i].length + 1;
+            if (select < count) {
+                row = i;
+                len = 0;
+                marginLeftSelect = select - (count - rowsText[i].length);
+            }
+        }
+
+        if (row > 0) {
+            if (marginLeftSelect >= rowsText[row - 1].length) {
+                select -= marginLeftSelect + 2;
+            } else {
+                select -= rowsText[row - 1].length + 1;
+            }
+        } else {
+            select = 0;
         }
 
         if (!this.shiftL && !this.shiftR) {
-            this.input.selectionStart = select;
+            if (this.input.selectionStart === this.input.selectionEnd) {
+                this.input.selectionStart = select;
+                this.input.selectionEnd = select;
+            } else {
+                this.input.selectionEnd = this.input.selectionStart;
+            }
+        } else if (this.select < this.input.selectionEnd) {
             this.input.selectionEnd = select;
         } else {
             this.input.selectionStart = select;
@@ -465,5 +538,90 @@ export default class Keyboard {
             document.getElementById(this.idBtns[key]).innerHTML = letter;
             this.buttons[this.idBtns[key]].current = letter;
         }
+    }
+
+    parseText() {
+        const text = this.input.innerHTML;
+        const rowsWithEnter = text.split('\n');
+        const rowsText = [];
+        const { cols } = this.input;
+
+        for (let i = 0, len = rowsWithEnter.length; i < len; i += 1) {
+            if (rowsWithEnter[i].length <= cols) {
+                rowsText.push(rowsWithEnter[i]);
+            } else {
+                let word = '';
+                let space = '';
+                let row = '';
+                let curIndexWord = 0;
+                let curIndexSpace = 0;
+                for (let j = 0, { length } = rowsWithEnter[i]; j < length; j += 1) {
+                    if (rowsWithEnter[i].length <= cols) {
+                        rowsText.push(rowsWithEnter[i]);
+                        length = 0;
+                    } else if (rowsWithEnter[i][j] !== ' ') {
+                        word += rowsWithEnter[i][j];
+                        curIndexWord += 1;
+
+                        if (space !== '') {
+                            row += space;
+                            space = '';
+                            curIndexSpace = 0;
+                        }
+
+                        if (curIndexWord > cols) {
+                            rowsText.push(word.slice(0, cols));
+                            rowsWithEnter[i] = rowsWithEnter[i].slice(cols);
+                            length = rowsWithEnter[i].length;
+                            j = -1;
+                            word = '';
+                            row = '';
+                            curIndexWord = 0;
+                        } if (row.length + curIndexWord > cols) {
+                            rowsText.push(row);
+                            rowsWithEnter[i] = rowsWithEnter[i].slice(row.length);
+                            length = rowsWithEnter[i].length;
+                            j = -1;
+                            word = '';
+                            row = '';
+                            curIndexWord = 0;
+                        }
+                    } else {
+                        curIndexSpace += 1;
+                        space += ' ';
+                        if (word !== '') {
+                            row += word;
+                            word = '';
+                            curIndexWord = 0;
+                        }
+
+                        if (curIndexSpace > cols) {
+                            rowsText.push(space.slice(0, cols));
+                            rowsWithEnter[i] = rowsWithEnter[i].slice(cols).replace(/^\s+/g, '');
+                            length = rowsWithEnter[i].length;
+                            j = -1;
+                            space = '';
+                            row = '';
+                            curIndexSpace = 0;
+                        } if (row.length + curIndexSpace > cols) {
+                            row += String(' ').repeat(cols - row.length);
+                            rowsText.push(row);
+                            rowsWithEnter[i] = rowsWithEnter[i].slice(cols).replace(/^\s+/g, '');
+                            length = rowsWithEnter[i].length;
+                            j = -1;
+                            space = '';
+                            row = '';
+                            curIndexSpace = 0;
+                        }
+                    }
+                }
+            }
+        }
+        const start = this.input.selectionStart;
+        const end = this.input.selectionEnd;
+        this.input.innerHTML = rowsText.join('\n');
+        this.input.selectionEnd = end - (text.length - this.input.innerHTML.length);
+        this.input.selectionStart = start - (text.length - this.input.innerHTML.length);
+        return rowsText;
     }
 }

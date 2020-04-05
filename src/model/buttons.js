@@ -222,7 +222,7 @@ const buttons = {
     tab: {
         service: true,
         current: 'Tab',
-        write: '\t',
+        write: '    ',
     },
     keyQ: {
         title: 'KeyQ',

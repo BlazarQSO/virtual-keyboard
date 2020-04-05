@@ -24,6 +24,7 @@
     box-sizing: border-box;
     outline: none;
     resize: none;
+    overflow-x: hidden;
 }
 
 .chooseLanguages, .button {
@@ -155,18 +156,15 @@
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: gray;
     border-radius: 3px;
-    cursor: pointer !important;
 }
 
 .input::-webkit-scrollbar {
-    width: 15px;
+    width: 10px;
     border-radius: 3px;
-    cursor: pointer !important;
 }
 
 .input::-webkit-scrollbar-thumb {
     background-color: goldenrod;
     border: 2px solid #555555;
     border-radius: 3px;
-    cursor: pointer !important;
 }
