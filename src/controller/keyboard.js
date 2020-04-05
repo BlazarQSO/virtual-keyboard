@@ -61,7 +61,7 @@ export default class Keyboard {
         wrapper.append(input);
         wrapper.append(keyboard);
         document.getElementById(targetId).append(wrapper);
-
+        document.getElementById('capsLock').classList.add('lamp');
         this.input = input;
 
         const firstLang = sessionStorage.getItem('firstLang') || false;
@@ -257,6 +257,7 @@ export default class Keyboard {
                 } else if (!this.buttons.capsLock.down) {
                     this.buttons.capsLock.down = true;
                     document.getElementById(id).classList.add('press');
+                    document.getElementById(id).classList.toggle('lampActive');
                     this.pressKey(id);
                 }
             }
