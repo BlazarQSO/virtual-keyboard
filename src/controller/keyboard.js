@@ -10,6 +10,8 @@ export default class Keyboard {
         this.altR = false;
         this.caps = false;
         this.ctrlAlt = false;
+        this.scroll = 0;
+        this.inputFrame = [0, 6];
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
         this.buttons = buttons;
         this.idBtns = Object.keys(this.buttons);
@@ -17,12 +19,13 @@ export default class Keyboard {
         this.selectionSideLeft = false;
     }
 
-    create(targetId) {
-        this.createKeyboard(targetId);
+    create(targetId, cols = 60, viewRow = 6) {
+        this.createKeyboard(targetId, cols);
         this.createEvent(targetId);
+        this.inputFrame[1] = viewRow;
     }
 
-    createKeyboard(targetId, cols = 60) {
+    createKeyboard(targetId, cols) {
         const wrapper = document.createElement('div');
         wrapper.className = 'wrapper';
 
@@ -124,6 +127,9 @@ export default class Keyboard {
             this.input.selectionStart = select + 4;
             this.input.selectionEnd = select + 4;
         }
+
+        const rowsText = this.parseText();
+        this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
     pressKey(id) {
@@ -273,6 +279,8 @@ export default class Keyboard {
         this.input.innerHTML = text;
         this.input.selectionStart = select;
         this.input.selectionEnd = select;
+        const rowsText = this.parseText();
+        this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
     buttonBackspace() {
@@ -291,6 +299,8 @@ export default class Keyboard {
             this.input.selectionStart = select;
             this.input.selectionEnd = select;
         }
+        const rowsText = this.parseText();
+        this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
     buttonLeftShiftDown() {
@@ -400,7 +410,7 @@ export default class Keyboard {
     }
 
     buttonArrowLeft() {
-        this.parseText();
+        const rowsText = this.parseText();
         if (this.shiftL || this.shiftR) {
             if (this.select < this.input.selectionEnd) {
                 if (this.input.selectionEnd > 0) {
@@ -417,10 +427,12 @@ export default class Keyboard {
         } else {
             this.input.selectionEnd = this.input.selectionStart;
         }
+
+        this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
     buttonArrowRight() {
-        this.parseText();
+        const rowsText = this.parseText();
         if (this.shiftL || this.shiftR) {
             if (this.select > this.input.selectionStart) {
                 this.input.selectionStart += 1;
@@ -433,6 +445,8 @@ export default class Keyboard {
         } else {
             this.input.selectionStart = this.input.selectionEnd;
         }
+
+        this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
     buttonArrowDown() {
@@ -444,18 +458,7 @@ export default class Keyboard {
         }
 
         const rowsText = this.parseText();
-
-        let count = 0;
-        let row = 0;
-        let marginLeftSelect = 0;
-        for (let i = 0, len = rowsText.length; i < len; i += 1) {
-            count += rowsText[i].length + 1;
-            if (select < count) {
-                row = i;
-                len = 0;
-                marginLeftSelect = select - (count - rowsText[i].length);
-            }
-        }
+        const { row, marginLeftSelect } = this.getRowHavingCursor(select, rowsText, 'down');
 
         if (row < rowsText.length - 1) {
             if (marginLeftSelect >= rowsText[row + 1].length) {
@@ -490,18 +493,7 @@ export default class Keyboard {
         }
 
         const rowsText = this.parseText();
-
-        let count = 0;
-        let row = 0;
-        let marginLeftSelect = 0;
-        for (let i = 0, len = rowsText.length; i < len; i += 1) {
-            count += rowsText[i].length + 1;
-            if (select < count) {
-                row = i;
-                len = 0;
-                marginLeftSelect = select - (count - rowsText[i].length);
-            }
-        }
+        const { row, marginLeftSelect } = this.getRowHavingCursor(select, rowsText, 'up');
 
         if (row > 0) {
             if (marginLeftSelect >= rowsText[row - 1].length) {
@@ -525,6 +517,40 @@ export default class Keyboard {
         } else {
             this.input.selectionStart = select;
         }
+    }
+
+    getRowHavingCursor(select, rowsText, direction) {
+        let count = 0;
+        let row = 0;
+        let marginLeftSelect = 0;
+        for (let i = 0, len = rowsText.length; i < len; i += 1) {
+            count += rowsText[i].length + 1;
+            if (select < count) {
+                row = i;
+                len = 0;
+                marginLeftSelect = select - (count - rowsText[i].length);
+            }
+        }
+
+        let nextRow = row;
+        if (direction === 'up') nextRow = row - 1;
+        if (direction === 'down') nextRow = row + 1;
+
+        const ROW_HEIGHT = 31;
+        if (nextRow < this.inputFrame[0]) {
+            this.inputFrame[0] -= 1;
+            this.inputFrame[1] -= 1;
+            this.scroll = (nextRow) * ROW_HEIGHT;
+            this.input.scrollTop = this.scroll;
+        } if (nextRow > this.inputFrame[1]) {
+            this.inputFrame[0] += 1;
+            this.inputFrame[1] += 1;
+            this.scroll = (nextRow - 6) * ROW_HEIGHT;
+            this.input.scrollTop = this.scroll;
+        }
+        this.input.scrollTop = this.scroll;
+
+        return { row, marginLeftSelect };
     }
 
     redrawLetters() {

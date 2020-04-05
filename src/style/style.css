@@ -10,8 +10,8 @@
 .input {
     min-width: 876px;
     max-width: 876px;
-    min-height: 200px;
-    max-height: 200px;
+    min-height: 222px;
+    max-height: 222px;
     display: block;
     color: blue;
     font-size: 26px;
@@ -25,6 +25,7 @@
     outline: none;
     resize: none;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .chooseLanguages, .button {
