@@ -1,3 +1,5 @@
+import languagesList from '../model/languages';
+
 export default class Keyboard {
     constructor(buttons) {
         this.shiftL = false;
@@ -7,6 +9,7 @@ export default class Keyboard {
         this.altL = false;
         this.altR = false;
         this.caps = false;
+        this.ctrlAlt = false;
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
         this.buttons = buttons;
         this.idBtns = Object.keys(this.buttons);
@@ -55,8 +58,17 @@ export default class Keyboard {
         wrapper.append(keyboard);
         document.getElementById(targetId).append(wrapper);
 
-        input.focus();
         this.input = input;
+
+        const firstLang = sessionStorage.getItem('firstLang') || false;
+        if (firstLang && firstLang !== 'US') {
+            this.changeLanguages('firstLang', languagesList[firstLang]);
+        }
+        const secondLang = sessionStorage.getItem('secondLang') || false;
+        if (secondLang && secondLang !== 'Russian') {
+            this.changeLanguages('secondLang', languagesList[secondLang]);
+        }
+        input.focus();
     }
 
     createEvent(targetId) {
@@ -338,9 +350,10 @@ export default class Keyboard {
     buttonCtrlDown(direction) {
         this.ctrlL = (direction === 'left') ? true : this.ctrlL;
         this.ctrlR = (direction === 'right') ? true : this.ctrlR;
-        if (this.altL || this.altR) {
+        if ((this.altL || this.altR) && !this.ctrlAlt) {
             this.lang = (this.lang === 'firstLang') ? 'secondLang' : 'firstLang';
             sessionStorage.setItem('lang', this.lang);
+            this.ctrlAlt = true;
             this.redrawLetters();
         }
     }
@@ -348,14 +361,18 @@ export default class Keyboard {
     buttonCtrlUp(direction) {
         this.ctrlL = (direction === 'left') ? false : this.ctrlL;
         this.ctrlR = (direction === 'right') ? false : this.ctrlR;
+        if (!this.ctrlL && !this.ctrlR) {
+            this.ctrlAlt = false;
+        }
     }
 
     buttonAltDown(direction) {
         this.altL = (direction === 'left') ? true : this.altL;
         this.altR = (direction === 'right') ? true : this.altR;
-        if (this.ctrlL || this.ctrlR) {
+        if ((this.ctrlL || this.ctrlR) && !this.ctrlAlt) {
             this.lang = (this.lang === 'firstLang') ? 'secondLang' : 'firstLang';
             sessionStorage.setItem('lang', this.lang);
+            this.ctrlAlt = true;
             this.redrawLetters();
         }
     }
@@ -363,6 +380,9 @@ export default class Keyboard {
     buttonAltUp(direction) {
         this.altL = (direction === 'left') ? false : this.altL;
         this.altR = (direction === 'right') ? false : this.altR;
+        if (!this.altL && !this.altR) {
+            this.ctrlAlt = false;
+        }
     }
 
     buttonCapsDown() {
