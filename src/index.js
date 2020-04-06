@@ -39,7 +39,7 @@ function chooseLanguages(languages) {
 
     const info = document.createElement('p');
     info.className = 'info';
-    info.innerHTML = 'OS: Window 10, change language: Ctrl + Alt';
+    info.innerHTML = 'OS: Window 10. Change language: Ctrl + Alt. Can use: Ctrl + A, Ctrl + C, Ctrl + V.';
 
     wrapper.append(label);
     wrapper.append(secondSelect);

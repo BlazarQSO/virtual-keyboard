@@ -132,7 +132,13 @@ export default class Keyboard {
             this.input.selectionEnd = select + 4;
         }
 
-        const rowsText = this.parseText();
+        const nextLetter = this.input.innerHTML[this.input.selectionStart];
+        let rowsText;
+        if (nextLetter === ' ' || nextLetter === '\n' || nextLetter === undefined) {
+            rowsText = this.parseText();
+        } else {
+            rowsText = this.input.innerHTML.split('\n');
+        }
         this.getRowHavingCursor(this.input.selectionStart, rowsText);
     }
 
