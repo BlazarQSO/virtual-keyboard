@@ -26,6 +26,7 @@
     resize: none;
     overflow-x: hidden;
     overflow-y: auto;
+    cursor: text !important;
 }
 
 .chooseLanguages, .button {
@@ -45,6 +46,7 @@
     text-decoration: none;
     user-select: none;
     padding: 0px;
+    cursor: pointer;
     background-image: -moz-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFD700), color-stop(50, #D9CF73), color-stop(100, #8F7800));
     background-image: -webkit-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);

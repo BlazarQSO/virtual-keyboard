@@ -1,7 +1,7 @@
 import languagesList from '../model/languages';
 
 export default class Keyboard {
-    constructor(buttons, cols = 60, viewRow = 6, rowHeight = 30.5) {
+    constructor(buttons, cols = 60, viewRow = 7, rowHeight = 30.5) {
         this.shiftL = false;
         this.shiftR = false;
         this.ctrlL = false;
@@ -11,7 +11,8 @@ export default class Keyboard {
         this.caps = false;
         this.ctrlAlt = false;
         this.scroll = 0;
-        this.inputFrame = [0, viewRow];
+        this.viewRow = viewRow - 1;
+        this.inputFrame = [0, this.viewRow];
         this.cols = cols;
         this.rowHeight = rowHeight;
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
@@ -80,6 +81,7 @@ export default class Keyboard {
         keyboard.addEventListener('mousedown', this.mouseDown.bind(this), false);
         keyboard.addEventListener('mouseup', this.mouseUp.bind(this), false);
         this.input.addEventListener('mouseup', this.mouseInputUp.bind(this), false);
+        this.input.addEventListener('mousedown', this.setSelection.bind(this), false);
 
         document.getElementById(targetId).addEventListener('keydown', this.keyDown.bind(this), false);
         document.getElementById(targetId).addEventListener('keyup', this.keyUp.bind(this), false);
@@ -223,7 +225,12 @@ export default class Keyboard {
                 this.pushCtrlC();
             } else if (e.code === 'KeyV' && (this.ctrlL || this.ctrlR)) {
                 this.pushCtrlV();
-            } else {
+            } else if (e.target.id !== 'capsLock') {
+                this.pressKey(e.target.id);
+            } else if (!this.buttons.capsLock.down) {
+                this.buttons.capsLock.down = true;
+                document.getElementById(e.target.id).classList.add('press');
+                document.getElementById(e.target.id).classList.toggle('lampActive');
                 this.pressKey(e.target.id);
             }
         }
@@ -231,6 +238,7 @@ export default class Keyboard {
 
     mouseUp(e) {
         if (e.target.closest('div').className === 'keyboard') {
+            this.buttons.capsLock.down = false;
             this.upKey(e.target.id);
         }
     }
@@ -489,6 +497,7 @@ export default class Keyboard {
             select = this.input.innerHTML.length;
         }
 
+        let overSelectionEnd;
         if (!this.shiftL && !this.shiftR) {
             if (this.input.selectionStart === this.input.selectionEnd) {
                 this.input.selectionStart = select;
@@ -497,9 +506,13 @@ export default class Keyboard {
                 this.input.selectionStart = this.input.selectionEnd;
             }
         } else if (this.select > this.input.selectionStart) {
+            overSelectionEnd = this.input.selectionEnd;
             this.input.selectionStart = select;
         } else {
             this.input.selectionEnd = select;
+        }
+        if (this.input.selectionStart > overSelectionEnd) {
+            this.input.selectionStart = overSelectionEnd;
         }
     }
 
@@ -524,6 +537,7 @@ export default class Keyboard {
             select = 0;
         }
 
+        let overSelectionStart;
         if (!this.shiftL && !this.shiftR) {
             if (this.input.selectionStart === this.input.selectionEnd) {
                 this.input.selectionStart = select;
@@ -532,9 +546,13 @@ export default class Keyboard {
                 this.input.selectionEnd = this.input.selectionStart;
             }
         } else if (this.select < this.input.selectionEnd) {
+            overSelectionStart = this.input.selectionStart;
             this.input.selectionEnd = select;
         } else {
             this.input.selectionStart = select;
+        }
+        if (overSelectionStart > this.input.selectionEnd) {
+            this.input.selectionEnd = overSelectionStart;
         }
     }
 
@@ -719,5 +737,12 @@ export default class Keyboard {
             .catch((err) => {
                 this.error = err.message;
             });
+    }
+
+    setSelection() {
+        this.scroll = this.input.scrollTop;
+        const rowScroll = Math.round(this.scroll / this.rowHeight);
+        this.inputFrame[0] = rowScroll;
+        this.inputFrame[1] = rowScroll + this.viewRow;
     }
 }
